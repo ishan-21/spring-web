@@ -1,0 +1,28 @@
+spring:
+  application:
+    name: spring-web
+  datasource:
+    url: jdbc:h2:mem:spring_web
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+  jpa:
+    hibernate:
+      ddl-auto: none  # Disable Hibernate's DDL generation
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+        format_sql: true
+  sql:
+    init:
+      mode: always  # Always initialize the database
+      schema-locations: classpath:schema.sql
+      data-locations: classpath:data.sql
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+
+# enable H2 console which can be accessed at /h2-console or http://localhost:8080/h2-console
