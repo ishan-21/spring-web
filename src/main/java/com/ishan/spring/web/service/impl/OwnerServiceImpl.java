@@ -54,6 +54,30 @@ public class OwnerServiceImpl implements OwnerService {
     }
 
     @Override
+    public OwnerDto updateOwner(OwnerDto ownerDto) throws OwnerNotFoundException {
+        Owner existingOwner = ownerRepository.findById(ownerDto.getId())
+                .orElseThrow(() -> new OwnerNotFoundException(String.format(ownerNotFound, ownerDto.getId())));
+
+        Owner updatedOwner = ownerMapper.ownerDTOToOwner(ownerDto);
+        // Update fields manually
+        existingOwner.setFirstName(updatedOwner.getFirstName());
+        existingOwner.setLastName(updatedOwner.getLastName());
+        existingOwner.setGender(updatedOwner.getGender());
+        existingOwner.setCity(updatedOwner.getCity());
+        existingOwner.setState(updatedOwner.getState());
+        existingOwner.setMobileNumber(updatedOwner.getMobileNumber());
+        existingOwner.setEmailId(updatedOwner.getEmailId());
+
+        // Update pet if needed
+        if (ownerDto.getPetDto() != null) {
+            existingOwner.setPet(updatedOwner.getPet());
+        }
+
+        Owner newUpdatedOwner = ownerRepository.save(existingOwner);
+        return ownerMapper.ownerToOwnerDto(newUpdatedOwner);
+    }
+
+    @Override
     public OwnerDto findOwner(int ownerId) throws OwnerNotFoundException {
             return ownerRepository.findById(ownerId)
                     .map(ownerMapper::ownerToOwnerDto)

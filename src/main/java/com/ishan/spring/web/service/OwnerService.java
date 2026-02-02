@@ -13,6 +13,8 @@ public interface OwnerService {
 
     void deleteOwner(int ownerId) throws OwnerNotFoundException;
 
+    OwnerDto updateOwner(OwnerDto ownerDto) throws OwnerNotFoundException;
+
     OwnerDto findOwner(int ownerId) throws OwnerNotFoundException;
 
     List<OwnerDto> findAllOwners();

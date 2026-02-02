@@ -31,6 +31,15 @@ public class OwnerController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
+    @PutMapping
+    public ResponseEntity<OwnerDto> updateOwner(@RequestBody OwnerDto ownerDto) {
+        try{
+            OwnerDto updatedOwner = ownerService.updateOwner(ownerDto);
+            return ResponseEntity.status(HttpStatus.OK).body(updatedOwner);
+        }catch (OwnerNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
 
     @GetMapping
     public ResponseEntity<OwnerDto> findOwner(@RequestParam("ownerId") int ownerId) {
