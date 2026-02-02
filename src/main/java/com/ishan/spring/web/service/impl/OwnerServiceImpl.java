@@ -1,74 +1,68 @@
 package com.ishan.spring.web.service.impl;
 
+import com.ishan.spring.web.dto.OwnerDto;
+import com.ishan.spring.web.dto.PetDto;
+import com.ishan.spring.web.entity.Owner;
+import com.ishan.spring.web.entity.Pet;
 import com.ishan.spring.web.exception.OwnerNotFoundException;
 import com.ishan.spring.web.repository.OwnerRepository;
 import com.ishan.spring.web.service.OwnerService;
+import com.ishan.spring.web.util.OwnerMapper;
+import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import lombok.RequiredArgsConstructor;
 
+import java.util.List;
 
 @RequiredArgsConstructor
 @Service
 public class OwnerServiceImpl implements OwnerService {
-
     private final OwnerRepository ownerRepository;
-    @Value("${owner.not.found}")
+    private final OwnerMapper ownerMapper;
+
+    @Value( "${owner.not.found}")
     private String ownerNotFound;
-    private boolean toggle = true;
+
+    private final Logger LOGGER = org.slf4j.LoggerFactory.getLogger(OwnerServiceImpl.class);
 
     @Override
-    public String saveOwner() {
-        return ownerRepository.save();
+    public void saveOwner(OwnerDto ownerDto) {
+        ownerRepository.save(ownerMapper.ownerDTOToOwner(ownerDto));
     }
 
     @Override
-    public String findOwner() throws OwnerNotFoundException {
-        if (toggle) {
-            toggle = !toggle;
-            return ownerRepository.find();
-        } else {
-            toggle = !toggle;
-            throw new OwnerNotFoundException(ownerNotFound);
+    public void updatePetDetails(int ownerId, String petName) throws OwnerNotFoundException {
+        Owner owner = ownerRepository.findById(ownerId)
+                .orElseThrow(() -> new OwnerNotFoundException(String.format(ownerNotFound, ownerId)));
+        
+        Pet pet = owner.getPet();
+        if (pet == null) {
+            LOGGER.info("No pet found for owner with ID {}", ownerId);
+            return;
         }
+        pet.setName(petName);
+        ownerRepository.save(owner);
     }
 
     @Override
-    public String updateOwner() throws OwnerNotFoundException {
-        if (toggle) {
-            toggle = !toggle;
-            return ownerRepository.updateOwner();
-        } else {
-            toggle = !toggle;
-            throw new OwnerNotFoundException(ownerNotFound);
+    public void deleteOwner(int ownerId) throws OwnerNotFoundException {
+        if (!ownerRepository.existsById(ownerId)) {
+            throw new OwnerNotFoundException(String.format(ownerNotFound, ownerId));
         }
+        ownerRepository.deleteById(ownerId);
     }
 
     @Override
-    public String updatePetDetails() throws OwnerNotFoundException {
-        if (toggle) {
-            toggle = !toggle;
-            return ownerRepository.updatePetDetails();
-        } else {
-            toggle = !toggle;
-            throw new OwnerNotFoundException(ownerNotFound);
-        }
+    public OwnerDto findOwner(int ownerId) throws OwnerNotFoundException {
+            return ownerRepository.findById(ownerId)
+                    .map(ownerMapper::ownerToOwnerDto)
+                    .orElseThrow(() -> new OwnerNotFoundException(String.format(ownerNotFound, ownerId)));
     }
 
     @Override
-    public String deleteOwner() throws OwnerNotFoundException {
-        if (toggle) {
-            toggle = !toggle;
-            return ownerRepository.delete();
-        } else {
-            toggle = !toggle;
-            throw new OwnerNotFoundException(ownerNotFound);
-        }
-    }
-
-    @Override
-    public String findAllOwners() {
-        return ownerRepository.findAll();
+    public List<OwnerDto> findAllOwners() {
+        return ownerRepository.findAll().stream().map(ownerMapper::ownerToOwnerDto).toList();
     }
 
 }

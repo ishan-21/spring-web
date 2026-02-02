@@ -1,18 +1,9 @@
 package com.ishan.spring.web.repository;
 
+import com.ishan.spring.web.entity.Owner;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface OwnerRepository {
 
-    String save();
-
-    String find();
-
-    String updateOwner();
-
-    String updatePetDetails();
-
-    String delete();
-
-    String findAll();
+public interface OwnerRepository extends JpaRepository<Owner, Integer> {
 
 }
