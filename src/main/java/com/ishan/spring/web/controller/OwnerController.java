@@ -16,6 +16,7 @@ import java.util.List;
 @RequestMapping(value = "/owners")
 @RestController // @Controller + @ResponseBody => All methods automatically serialize responses to JSON/XML
 public class OwnerController {
+    
     /*
      * In all the below methods we are using ResponseEntity to return the response.
      * => so that we can manipulate the status code ( for OwnerNotFoundException we should send 404 for example )
@@ -32,46 +33,28 @@ public class OwnerController {
     }
 
     @PutMapping
-    public ResponseEntity<OwnerDto> updateOwner(@RequestBody OwnerDto ownerDto) {
-        try{
-            OwnerDto updatedOwner = ownerService.updateOwner(ownerDto);
-            return ResponseEntity.status(HttpStatus.OK).body(updatedOwner);
-        }catch (OwnerNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
+    public ResponseEntity<OwnerDto> updateOwner(@RequestBody OwnerDto ownerDto) throws OwnerNotFoundException {
+        OwnerDto updatedOwner = ownerService.updateOwner(ownerDto);
+        return ResponseEntity.status(HttpStatus.OK).body(updatedOwner);
     }
 
     @GetMapping
-    public ResponseEntity<OwnerDto> findOwner(@RequestParam("ownerId") int ownerId) {
-        try {
-            OwnerDto ownerDto = ownerService.findOwner(ownerId);
-            return ResponseEntity.status(HttpStatus.OK).body(ownerDto);
-        } catch (OwnerNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
+    public ResponseEntity<OwnerDto> findOwner(@RequestParam("ownerId") int ownerId) throws OwnerNotFoundException {
+        OwnerDto ownerDto = ownerService.findOwner(ownerId);
+        return ResponseEntity.status(HttpStatus.OK).body(ownerDto);
     }
-
 
     @PatchMapping("/{ownerId}/{petName}")
-    public ResponseEntity<OwnerDto> updatePetDetails(@PathVariable("ownerId") int ownerId, @PathVariable("petName") String petName) {
-        try {
-            ownerService.updatePetDetails(ownerId, petName);
-            OwnerDto updatedOwner = ownerService.findOwner(ownerId);
-            return ResponseEntity.status(HttpStatus.OK).body(updatedOwner);
-        } catch (OwnerNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
+    public ResponseEntity<OwnerDto> updatePetDetails(@PathVariable("ownerId") int ownerId, @PathVariable("petName") String petName) throws OwnerNotFoundException {
+        ownerService.updatePetDetails(ownerId, petName);
+        OwnerDto updatedOwner = ownerService.findOwner(ownerId);
+        return ResponseEntity.status(HttpStatus.OK).body(updatedOwner);
     }
 
-
     @DeleteMapping
-    public ResponseEntity<Void> deleteOwner(@RequestParam("ownerId") int ownerId) {
-        try {
-            ownerService.deleteOwner(ownerId);
-            return ResponseEntity.status(HttpStatus.OK).build();
-        } catch (OwnerNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
+    public ResponseEntity<Void> deleteOwner(@RequestParam("ownerId") int ownerId) throws OwnerNotFoundException {
+        ownerService.deleteOwner(ownerId);
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
 
