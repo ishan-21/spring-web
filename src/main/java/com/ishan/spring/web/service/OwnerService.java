@@ -18,4 +18,6 @@ public interface OwnerService {
     OwnerDto findOwner(int ownerId) throws OwnerNotFoundException;
 
     List<OwnerDto> findAllOwners();
+
+    List<OwnerDto> findAllOwnersPaginated(int pageNumber, int pageSize, String sortBy, boolean descending);
 }

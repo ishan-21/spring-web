@@ -69,4 +69,10 @@ public class OwnerController {
         return ResponseEntity.status(HttpStatus.OK).body(ownerService.findAllOwners());
     }
 
+    @GetMapping(value = "/all/paginated")
+    public ResponseEntity<List<OwnerDto>> findAllOwnersPaginated(@Min(value = 1, message = "{page.number.constraint}") @RequestParam("page-number") int pageNumber,@Min(value = 1, message = "{page.size.constraint}") @RequestParam("page-size") int pageSize, @RequestParam("sort-by") String sortBy, @RequestParam("descending") boolean descending) {
+        List<OwnerDto> ownersPaginated = ownerService.findAllOwnersPaginated(pageNumber, pageSize, sortBy, descending);
+        return ResponseEntity.status(HttpStatus.OK).body(ownersPaginated);
+    }
+
 }

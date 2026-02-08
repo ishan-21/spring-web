@@ -10,6 +10,9 @@ import com.ishan.spring.web.util.OwnerMapper;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -86,6 +89,14 @@ public class OwnerServiceImpl implements OwnerService {
     @Override
     public List<OwnerDto> findAllOwners() {
         return ownerRepository.findAll().stream().map(ownerMapper::ownerToOwnerDto).toList();
+    }
+    
+    @Override
+    public List<OwnerDto> findAllOwnersPaginated(int pageNumber, int pageSize, String sortBy, boolean descending) {
+        Sort.Direction direction = descending ? Sort.Direction.DESC : Sort.Direction.ASC;
+        Sort sortByAttributeAndDirection = Sort.by(direction,sortBy);
+        Pageable pageable = PageRequest.of(pageNumber-1, pageSize, sortByAttributeAndDirection );
+        return ownerRepository.findAll(pageable).getContent().stream().map(ownerMapper::ownerToOwnerDto).toList();
     }
 
 }
