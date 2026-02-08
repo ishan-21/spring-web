@@ -1,6 +1,9 @@
 package com.ishan.spring.web.dto;
 
 import com.ishan.spring.web.enums.Gender;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 
 @AllArgsConstructor
@@ -22,13 +25,17 @@ public class OwnerDto {
 
     @EqualsAndHashCode.Include
     private int id;
+    @NotBlank(message = "{first.name.constraint}")
     private String firstName;
+    @NotBlank(message = "{last.name.constraint}")
     private String lastName;
     private Gender gender;
     private String city;
     private String state;
+    @Size(min = 10, max = 10, message = "{mobile.number.constraint}")
     @EqualsAndHashCode.Include
     private String mobileNumber;
+    @Email(message = "{email.constraint}")
     @EqualsAndHashCode.Include
     private String emailId;
     @EqualsAndHashCode.Include

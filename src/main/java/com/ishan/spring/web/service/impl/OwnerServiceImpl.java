@@ -1,7 +1,6 @@
 package com.ishan.spring.web.service.impl;
 
 import com.ishan.spring.web.dto.OwnerDto;
-import com.ishan.spring.web.dto.PetDto;
 import com.ishan.spring.web.entity.Owner;
 import com.ishan.spring.web.entity.Pet;
 import com.ishan.spring.web.exception.OwnerNotFoundException;
