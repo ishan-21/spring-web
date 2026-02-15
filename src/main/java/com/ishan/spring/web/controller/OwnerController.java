@@ -17,6 +17,13 @@ import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
+
+/*
+    @CrossOrigin(origins = "http://localhost:3000")  // Allow specific origin
+    @CrossOrigin(origins = "*", maxAge = 3600)       // All origins with 1hr cache
+    @CrossOrigin(methods = {RequestMethod.GET, RequestMethod.POST})  // Specific methods
+*/
+@CrossOrigin // used to prevent CORS errors => browser blocks requests from different origins (different domains (xyz.com), ports(8080,9090,etc), or protocols(http/https,etc))
 @Validated // for input validation
 @RequiredArgsConstructor
 @RequestMapping(value = "/owners")
